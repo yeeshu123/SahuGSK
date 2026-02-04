@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>साहू ग्राहक सेवा केंद्र रसीद</title>
+    <style>
+        /* --- GENERAL STYLES --- */
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #e6edf7 0%, #f4f6fb 50%, #edf3ff 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px;
+        }
+
+        h1 { margin: 0 0 24px 0; font-size: 28px; color: #1f3b5b; }
+
+        .screen-wrapper {
+            display: flex;
+            gap: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .input-panel {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12);
+            width: 480px;
+            border-top: 3px solid #2563eb;
+        }
+
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; font-size: 15px; font-weight: 600; margin-bottom: 8px; color: #374151; }
+        .form-group input, .form-group textarea { 
+            width: 100%; padding: 12px; box-sizing: border-box; border: 1px solid #d1d5db; border-radius: 8px; font-size: 16px;
+        }
+
+        /* --- TAB STYLING --- */
+        .major-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        .major-btn { flex: 1; padding: 12px; font-weight: 700; border-radius: 8px; border: 2px solid #2563eb; cursor: pointer; background: white; color: #2563eb; }
+        .major-btn.active { background: #2563eb; color: white; }
+
+        .sub-tabs { display: flex; gap: 5px; background: #f1f5f9; padding: 5px; border-radius: 999px; margin-bottom: 20px; }
+        .sub-btn { flex: 1; border: none; background: transparent; padding: 8px; font-size: 12px; font-weight: 600; cursor: pointer; border-radius: 999px; }
+        .sub-btn.active { background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); color: #2563eb; }
+
+        .button-group { display: flex; gap: 12px; margin-top: 10px; }
+        .print-btn { background: linear-gradient(135deg, #16a34a, #22c55e); color: white; border: none; padding: 16px 20px; flex: 2; cursor: pointer; font-size: 18px; font-weight: 700; border-radius: 999px; box-shadow: 0 8px 18px rgba(22, 163, 74, 0.35); }
+        .clear-btn { background: #ef4444; color: white; border: none; padding: 16px; flex: 1; cursor: pointer; font-size: 14px; font-weight: 700; border-radius: 999px; }
+
+        /* --- RECEIPT PREVIEW (SCREEN) --- */
+        #receipt-preview {
+            background: #ffffff; width: 80mm; padding: 6mm; border-radius: 10px; border: 1px solid #e5e7eb; color: #000; line-height: 1.6;
+        }
+        .receipt-header { text-align: center; font-weight: 800; font-size: 22px; }
+        .receipt-subheader { text-align: center; font-size: 15px; margin-bottom: 10px; }
+        .receipt-divider { border-top: 2px dashed #000; margin: 10px 0; }
+        .receipt-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
+        .receipt-label { font-weight: 700; font-size: 15px; }
+        .receipt-value { font-weight: 600; text-align: right; font-size: 15px; }
+        .big-amount-row { text-align: center; border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 10px 0; margin: 12px 0; }
+        .big-amount-value { font-size: 32px; font-weight: 900; }
+        .receipt-footer { text-align: center; margin-top: 20px; font-weight: 700; }
+
+        /* --- PROFESSIONAL PRINT STYLES --- */
+        @media print {
+            .input-panel, h1 { display: none !important; }
+            body { background: none; padding: 0; margin: 0; }
+            #receipt-preview { 
+                width: 58mm; 
+                box-shadow: none; 
+                border: none; 
+                position: absolute; 
+                left: 0; 
+                top: 0; 
+                padding: 2mm; 
+                font-size: 15px; 
+                line-height: 1.4;
+            }
+            .receipt-header { font-size: 20px !important; font-weight: 800; margin-bottom: 1mm; } 
+            .receipt-subheader { font-size: 14px; font-weight: 400; margin-bottom: 2mm; }
+            .receipt-row { margin-bottom: 4px; }
+            .receipt-label { font-size: 14px; font-weight: 700; }
+            .receipt-value { font-size: 15px; font-weight: 600; }
+            .big-amount-row { padding: 6px 0; margin: 6px 0; }
+            .big-amount-value { font-size: 32px !important; font-weight: 900; }
+            .receipt-footer { font-size: 14px; margin-top: 15px; font-weight: 700; }
+            .receipt-divider { border-top: 1.5px solid #000; margin: 6px 0; }
+            @page { size: 58mm auto; margin: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>साहू ग्राहक सेवा केंद्र, मोपका</h1>
+
+    <div class="screen-wrapper">
+        <div class="input-panel">
+            <div class="major-tabs">
+                <button class="major-btn active" id="btnAuto" onclick="setMajorTab('auto')">Automatic</button>
+                <button class="major-btn" id="btnManual" onclick="setMajorTab('manual')">Manual</button>
+            </div>
+
+            <div id="auto-controls">
+                <div class="sub-tabs">
+                    <button class="sub-btn active" id="subAutoWithdraw" onclick="setAutoSubTab('withdraw')">AEPS Withdrawal</button>
+                    <button class="sub-btn" id="subAutoDeposit" onclick="setAutoSubTab('deposit')">AEPS Deposit</button>
+                    <button class="sub-btn" id="subAutoTransfer" onclick="setAutoSubTab('transfer')">Money Transfer</button>
+                </div>
+                <div class="form-group">
+                    <label>ग्राहक का नाम</label>
+                    <input type="text" id="genName" class="clearable" oninput="updateReceipt()">
+                </div>
+                <div class="form-group">
+                    <label id="autoPasteLabel">निकासी मैसेज पेस्ट करें</label>
+                    <textarea id="genRawText" class="clearable" placeholder="Paste message here..." oninput="updateReceipt()" style="min-height: 100px;"></textarea>
+                </div>
+                <div class="form-group" id="autoTotalGroup" style="display:none">
+                    <label>कुल राशि (Total Balance)</label>
+                    <input type="text" id="autoTotalInput" class="clearable" placeholder="Enter total balance" oninput="updateReceipt()">
+                </div>
+            </div>
+
+            <div id="manual-controls" style="display:none">
+                <label style="font-size: 14px; font-weight: 600; display: block; margin-bottom: 8px;">मोड चुनें</label>
+                <div class="sub-tabs">
+                    <button id="mATM" class="sub-btn active" onclick="setManualMode('ATM')">ATM</button>
+                    <button id="mDep" class="sub-btn" onclick="setManualMode('AEPS Deposit')">AEPS Deposit</button>
+                    <button id="mWith" class="sub-btn" onclick="setManualMode('AEPS Withdrawal')">AEPS Withdrawal</button>
+                </div>
+                <div class="form-group"><label>ग्राहक का नाम</label><input type="text" id="inName" class="clearable" oninput="updateReceipt()"></div>
+                <div class="form-group" id="mAadhaarGroup" style="display:none"><label>आधार नंबर</label><input type="text" id="inAadhaar" class="clearable" oninput="updateReceipt()"></div>
+                <div class="form-group"><label>बैंक का नाम</label><input type="text" id="inBank" class="clearable" oninput="updateReceipt()"></div>
+                <div class="form-group"><label>ट्रांजैक्शन आईडी</label><input type="text" id="inTxn" class="clearable" oninput="updateReceipt()"></div>
+                <div class="form-group"><label id="manualAmtLabel">राशि</label><input type="number" id="inAmt" class="clearable" oninput="updateReceipt()"></div>
+                <div class="form-group"><label id="manualTotalLabel">शेष राशि</label><input type="text" id="inTotal" class="clearable" oninput="updateReceipt()"></div>
+            </div>
+
+            <div class="form-group">
+                <label>रसीद संख्या</label>
+                <input type="number" id="inReceiptNo" oninput="updateReceiptNo(this.value)">
+            </div>
+
+            <div class="button-group">
+                <button class="clear-btn" onclick="clearFields()">साफ करें</button>
+                <button class="print-btn" onclick="handlePrint()">प्रिंट करें</button>
+            </div>
+        </div>
+
+        <div id="receipt-preview">
+            <div class="receipt-header">साहू ग्राहक सेवा केंद्र, मोपका</div>
+            <div class="receipt-subheader"><span id="outTime">लोड हो रहा है...</span></div>
+            <div class="receipt-divider"></div>
+
+            <div class="receipt-row"><span class="receipt-label">ग्राहक का नाम</span><span class="receipt-value" id="outName">-----</span></div>
+            <div class="receipt-row"><span class="receipt-label">रसीद संख्या</span><span class="receipt-value" id="outReceiptNo">0001</span></div>
+            <div class="receipt-row"><span class="receipt-label">मोड</span><span class="receipt-value" id="outMode">ATM</span></div>
+            
+            <div class="receipt-row" id="outBeneRow" style="display:none"><span class="receipt-label">प्राप्तकर्ता</span><span class="receipt-value" id="outBene">-----</span></div>
+            <div class="receipt-row" id="outAccRow" style="display:none"><span class="receipt-label">खाता संख्या</span><span class="receipt-value" id="outAcc">-----</span></div>
+            
+            <div class="receipt-row" id="outAadhaarRow" style="display:none"><span class="receipt-label">आधार नंबर</span><span class="receipt-value" id="outAadhaar">-----</span></div>
+            <div class="receipt-row"><span class="receipt-label">बैंक</span><span class="receipt-value" id="outBank">-----</span></div>
+            <div class="receipt-row"><span class="receipt-label">ट्रांजैक्शन आईडी</span><span class="receipt-value" id="outTxn">-----</span></div>
+
+            <div class="big-amount-row">
+                <span class="receipt-label" id="outAmtLabel">निकासी राशि</span>
+                <div class="big-amount-value">₹<span id="outAmt">0</span></div>
+            </div>
+
+            <div class="receipt-row"><span class="receipt-label" id="outTotalLabel">शेष राशि</span><span class="receipt-value">₹<span id="outTotal">0.00</span></span></div>
+
+            <div class="receipt-divider"></div>
+            <div class="receipt-footer">धन्यवाद ,कृपया पुनः पधारे 🙏</div>
+        </div>
+    </div>
+
+    <script>
+        let majorTab = 'auto';
+        let autoSub = 'withdraw';
+        let manualMode = 'ATM';
+
+        // Helper to format numbers with commas
+        function formatNumber(val) {
+            if (!val || isNaN(val.toString().replace(/,/g, ''))) return val;
+            let num = val.toString().replace(/,/g, '');
+            return Number(num).toLocaleString('en-IN');
+        }
+
+        function setMajorTab(t) {
+            majorTab = t;
+            clearFields();
+            document.getElementById('btnAuto').classList.toggle('active', t === 'auto');
+            document.getElementById('btnManual').classList.toggle('active', t === 'manual');
+            document.getElementById('auto-controls').style.display = (t === 'auto' ? 'block' : 'none');
+            document.getElementById('manual-controls').style.display = (t === 'manual' ? 'block' : 'none');
+            updateReceipt();
+        }
+
+        function setAutoSubTab(s) {
+            autoSub = s;
+            clearFields();
+            document.getElementById('subAutoWithdraw').classList.toggle('active', s === 'withdraw');
+            document.getElementById('subAutoDeposit').classList.toggle('active', s === 'deposit');
+            document.getElementById('subAutoTransfer').classList.toggle('active', s === 'transfer');
+            
+            let labelText = 'निकासी मैसेज पेस्ट करें';
+            if(s === 'deposit') labelText = 'जमा मैसेज पेस्ट करें';
+            if(s === 'transfer') labelText = 'ट्रांसफर मैसेज पेस्ट करें';
+            
+            document.getElementById('autoPasteLabel').textContent = labelText;
+            document.getElementById('autoTotalGroup').style.display = (s !== 'withdraw' ? 'block' : 'none');
+            updateReceipt();
+        }
+
+        function setManualMode(m) {
+            manualMode = m;
+            clearFields();
+            document.getElementById('mATM').classList.toggle('active', m === 'ATM');
+            document.getElementById('mDep').classList.toggle('active', m === 'AEPS Deposit');
+            document.getElementById('mWith').classList.toggle('active', m === 'AEPS Withdrawal');
+            document.getElementById('mAadhaarGroup').style.display = (m === 'ATM' ? 'none' : 'block');
+            document.getElementById('manualAmtLabel').textContent = (m === 'AEPS Deposit' ? 'जमा राशि' : 'निकासी राशि');
+            document.getElementById('manualTotalLabel').textContent = (m === 'AEPS Deposit' ? 'कुल राशि' : 'शेष राशि');
+            updateReceipt();
+        }
+
+        function parseAuto() {
+            const raw = document.getElementById('genRawText').value || '';
+            const res = { bank: '-----', amt: '0', total: '0.00', txn: '-----', aadhaar: '-----', bene: '-----', acc: '-----' };
+            
+            if (autoSub === 'transfer') {
+                const lines = raw.split('\n');
+                const details = {};
+                lines.forEach(line => {
+                    const parts = line.split('\t');
+                    if (parts.length === 2) {
+                        details[parts[0].trim()] = parts[1].trim();
+                    }
+                });
+                
+                if (details['Bene Bank and IFSC']) res.bank = details['Bene Bank and IFSC'];
+                if (details['Txn Amount']) res.amt = details['Txn Amount'].replace('₹', '');
+                if (details['Txn ID']) res.txn = details['Txn ID'];
+                if (details['Bene Name']) res.bene = details['Bene Name'];
+                if (details['Bene Account No.']) res.acc = details['Bene Account No.'];
+                if (details['Total Amt']) res.total = details['Total Amt'].replace('₹', '');
+                if (details['Customer Name & Mobile']) {
+                    const namePart = details['Customer Name & Mobile'].split(' - ')[0];
+                    if(!document.getElementById('genName').value) document.getElementById('genName').value = namePart;
+                }
+            } else {
+                const bankMatch = raw.match(/(?:Bank Name[:\s]+|Customer Bank Name\s+)([^\n\r]+)/i);
+                const amtMatch = raw.match(/(?:Withdrawal|Deposit) Amount\s+([0-9.,]+)/i);
+                const txnMatch = raw.match(/Transaction ID\s+([0-9]+)/i);
+                const aadharMatch = raw.match(/Aadhaar Number\s+([xX0-9 ]+)/i);
+                const totalMatch = raw.match(/(?:Available Balance|Balance)[:\s]+([0-9.,NA]+)/i);
+
+                if (bankMatch) res.bank = bankMatch[1].trim();
+                if (amtMatch) res.amt = amtMatch[1];
+                if (txnMatch) res.txn = txnMatch[1];
+                if (aadharMatch) res.aadhaar = aadharMatch[1].trim();
+                if (totalMatch && totalMatch[1] !== 'NA') res.total = totalMatch[1];
+            }
+            
+            return res;
+        }
+
+        function updateReceipt() {
+            let name, bank, mode, amt, total, aadhaar, txn, bene, acc, isDeposit, isTransfer;
+
+            if (majorTab === 'auto') {
+                const p = parseAuto();
+                isDeposit = (autoSub === 'deposit');
+                isTransfer = (autoSub === 'transfer');
+                mode = isTransfer ? 'Money Transfer' : (isDeposit ? 'AEPS Deposit' : 'AEPS Withdrawal');
+                name = document.getElementById('genName').value || '-----';
+                bank = p.bank; amt = p.amt; txn = p.txn; aadhaar = p.aadhaar;
+                bene = p.bene; acc = p.acc;
+                total = (isDeposit || isTransfer) ? (document.getElementById('autoTotalInput').value || p.total) : p.total;
+            } else {
+                isDeposit = (manualMode === 'AEPS Deposit');
+                isTransfer = false;
+                mode = manualMode;
+                name = document.getElementById('inName').value || '-----';
+                bank = document.getElementById('inBank').value || '-----';
+                amt = document.getElementById('inAmt').value || '0';
+                total = document.getElementById('inTotal').value || '0.00';
+                txn = document.getElementById('inTxn').value || '-----';
+                aadhaar = document.getElementById('inAadhaar').value || '-----';
+            }
+
+            document.getElementById('outName').textContent = name;
+            document.getElementById('outMode').textContent = mode;
+            document.getElementById('outBank').textContent = bank;
+            document.getElementById('outAmt').textContent = formatNumber(amt);
+            document.getElementById('outTotal').textContent = formatNumber(total);
+            document.getElementById('outTxn').textContent = txn;
+            document.getElementById('outAadhaar').textContent = aadhaar;
+            
+            document.getElementById('outAadhaarRow').style.display = (mode === 'ATM' || isTransfer ? 'none' : 'flex');
+            document.getElementById('outBeneRow').style.display = (isTransfer ? 'flex' : 'none');
+            document.getElementById('outAccRow').style.display = (isTransfer ? 'flex' : 'none');
+            document.getElementById('outBene').textContent = bene;
+            document.getElementById('outAcc').textContent = acc;
+            
+            document.getElementById('outAmtLabel').textContent = isDeposit ? 'जमा राशि' : (isTransfer ? 'ट्रांसफर राशि' : 'निकासी राशि');
+            document.getElementById('outTotalLabel').textContent = isDeposit || isTransfer ? 'कुल राशि' : 'शेष राशि';
+        }
+
+        function updateReceiptNo(v) {
+            document.getElementById('outReceiptNo').textContent = v.toString().padStart(4, '0');
+            localStorage.setItem('rNo', v);
+        }
+
+        function handlePrint() {
+            window.print();
+            let n = parseInt(localStorage.getItem('rNo') || '1') + 1;
+            updateReceiptNo(n.toString());
+            document.getElementById('inReceiptNo').value = n;
+        }
+
+        function clearFields() {
+            document.querySelectorAll('.clearable').forEach(i => i.value = '');
+            updateReceipt();
+        }
+
+        setInterval(() => {
+            const n = new Date();
+            document.getElementById('outTime').textContent = n.toLocaleString('hi-IN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true });
+        }, 1000);
+
+        const saved = localStorage.getItem('rNo') || '1';
+        document.getElementById('inReceiptNo').value = saved;
+        updateReceiptNo(saved);
+        setMajorTab('auto');
+    </script>
+</body>
+</html>
