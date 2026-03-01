@@ -1,77 +1,210 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="hi" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>साहू ग्राहक सेवा केंद्र रसीद</title>
     <style>
+        /* --- CSS VARIABLES FOR THEMES --- */
+        :root {
+            --bg-main: #f3f6f9;
+            --bg-panel: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --border-color: #e2e8f0;
+            --primary-color: #3b82f6;
+            --primary-hover: #2563eb;
+            --input-bg: #f8fafc;
+            --input-border: #cbd5e1;
+            --input-text: #0f172a;
+            --history-item-bg: #f1f5f9;
+            --btn-success: #10b981;
+            --btn-success-hover: #059669;
+            --btn-danger: #ef4444;
+            --btn-danger-hover: #dc2626;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+
+        [data-theme="dark"] {
+            --bg-main: #0f172a;
+            --bg-panel: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --border-color: #334155;
+            --primary-color: #3b82f6;
+            --primary-hover: #60a5fa;
+            --input-bg: #0f172a;
+            --input-border: #475569;
+            --input-text: #f8fafc;
+            --history-item-bg: #334155;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.3);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.4);
+        }
+
         /* --- GENERAL STYLES --- */
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(135deg, #e6edf7 0%, #f4f6fb 50%, #edf3ff 100%);
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-primary);
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 40px;
+            padding: 30px;
+            margin: 0;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        h1 { margin: 0 0 24px 0; font-size: 28px; color: #1f3b5b; }
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 1400px;
+            margin-bottom: 30px;
+        }
+
+        h1 { margin: 0; font-size: 26px; font-weight: 700; color: var(--text-primary); }
+
+        .theme-toggle {
+            background: var(--bg-panel);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 999px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s;
+        }
+        .theme-toggle:hover { border-color: var(--primary-color); }
 
         .screen-wrapper {
             display: flex;
-            gap: 40px;
-            flex-wrap: wrap;
+            gap: 24px;
+            flex-wrap: nowrap;
             justify-content: center;
             align-items: flex-start;
             width: 100%;
-            max-width: 1200px;
+            max-width: 1400px;
+            overflow-x: auto;
+            padding-bottom: 20px;
         }
 
-        .input-panel {
-            background: #ffffff;
-            padding: 30px;
+        .panel {
+            background: var(--bg-panel);
+            padding: 24px;
             border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12);
-            width: 480px;
-            border-top: 3px solid #2563eb;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
-        .form-group { margin-bottom: 18px; }
-        .form-group label { display: block; font-size: 15px; font-weight: 600; margin-bottom: 8px; color: #374151; }
+        /* --- INPUT PANEL --- */
+        .input-panel { width: 480px; min-width: 480px; }
+        
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
         .form-group input, .form-group textarea { 
-            width: 100%; padding: 12px; box-sizing: border-box; border: 1px solid #d1d5db; border-radius: 8px; font-size: 16px;
+            width: 100%; padding: 12px; box-sizing: border-box; 
+            border: 1px solid var(--input-border); 
+            border-radius: 8px; font-size: 15px;
+            background-color: var(--input-bg);
+            color: var(--input-text);
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
         }
 
-        /* --- TAB STYLING --- */
-        .major-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
-        .major-btn { flex: 1; padding: 12px; font-weight: 700; border-radius: 8px; border: 2px solid #2563eb; cursor: pointer; background: white; color: #2563eb; }
-        .major-btn.active { background: #2563eb; color: white; }
+        /* --- TABS --- */
+        .major-tabs { display: flex; gap: 12px; margin-bottom: 24px; background: var(--bg-main); padding: 6px; border-radius: 12px; border: 1px solid var(--border-color); }
+        .major-btn { flex: 1; padding: 10px; font-weight: 600; font-size: 15px; border-radius: 8px; border: none; cursor: pointer; background: transparent; color: var(--text-secondary); transition: all 0.2s; }
+        .major-btn.active { background: var(--bg-panel); color: var(--primary-color); box-shadow: var(--shadow-sm); }
 
-        .sub-tabs { display: flex; gap: 5px; background: #f1f5f9; padding: 5px; border-radius: 999px; margin-bottom: 20px; }
-        .sub-btn { flex: 1; border: none; background: transparent; padding: 8px; font-size: 12px; font-weight: 600; cursor: pointer; border-radius: 999px; }
-        .sub-btn.active { background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); color: #2563eb; }
+        .sub-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+        .sub-btn { flex: 1; min-width: 80px; border: 1px solid var(--border-color); background: var(--bg-panel); padding: 8px 12px; font-size: 13px; font-weight: 600; cursor: pointer; border-radius: 8px; color: var(--text-secondary); transition: all 0.2s; text-align: center; }
+        .sub-btn:hover { border-color: var(--primary-color); }
+        .sub-btn.active { background: var(--primary-color); border-color: var(--primary-color); color: white; }
 
-        .button-group { display: flex; gap: 12px; margin-top: 10px; }
-        .print-btn { background: linear-gradient(135deg, #16a34a, #22c55e); color: white; border: none; padding: 16px 20px; flex: 2; cursor: pointer; font-size: 18px; font-weight: 700; border-radius: 999px; box-shadow: 0 8px 18px rgba(22, 163, 74, 0.35); }
-        .clear-btn { background: #ef4444; color: white; border: none; padding: 16px; flex: 1; cursor: pointer; font-size: 14px; font-weight: 700; border-radius: 999px; }
+        /* --- BUTTONS --- */
+        .button-group { display: flex; gap: 12px; margin-top: 24px; }
+        .print-btn { background: var(--btn-success); color: white; border: none; padding: 14px 20px; flex: 2; cursor: pointer; font-size: 16px; font-weight: 600; border-radius: 8px; transition: background 0.2s; }
+        .print-btn:hover { background: var(--btn-success-hover); }
+        .clear-btn { background: var(--bg-main); color: var(--btn-danger); border: 1px solid var(--btn-danger); padding: 14px; flex: 1; cursor: pointer; font-size: 14px; font-weight: 600; border-radius: 8px; transition: all 0.2s; }
+        .clear-btn:hover { background: var(--btn-danger); color: white; }
 
-        /* --- RECEIPT PREVIEW (SCREEN) --- */
+        /* --- HISTORY PANEL --- */
+        .history-panel { width: 320px; min-width: 320px; display: flex; flex-direction: column; max-height: 800px; }
+        .history-panel h2 { margin: 0 0 16px 0; font-size: 18px; color: var(--text-primary); }
+        .history-controls { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+        .history-controls input { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid var(--input-border); border-radius: 8px; font-size: 14px; background: var(--input-bg); color: var(--input-text); }
+        #historyList { overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 12px; padding-right: 4px; }
+        
+        .history-item { background: var(--history-item-bg); padding: 14px; border-radius: 10px; border: 1px solid var(--border-color); font-size: 13px; line-height: 1.6; color: var(--text-secondary); }
+        .history-item strong { color: var(--text-primary); font-size: 15px; display: block; margin-bottom: 4px; }
+        .view-print-btn { margin-top: 10px; background: var(--bg-panel); color: var(--primary-color); border: 1px solid var(--primary-color); padding: 8px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; width: 100%; transition: all 0.2s; }
+        .view-print-btn:hover { background: var(--primary-color); color: white; }
+
+        /* --- RECEIPT PREVIEW (Always White for Realistic Paper Feel) --- */
+        .receipt-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+        }
+        .receipt-badge {
+            background: var(--primary-color);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
         #receipt-preview {
-            background: #ffffff; width: 80mm; padding: 6mm; border-radius: 10px; border: 1px solid #e5e7eb; color: #000; line-height: 1.6;
+            background: #ffffff; 
+            width: 80mm; 
+            min-width: 80mm; 
+            padding: 6mm; 
+            border-radius: 4px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            color: #000000; /* Always black text */
+            line-height: 1.6;
+            position: relative;
         }
-        .receipt-header { text-align: center; font-weight: 800; font-size: 22px; }
-        .receipt-subheader { text-align: center; font-size: 15px; margin-bottom: 10px; }
-        .receipt-divider { border-top: 2px dashed #000; margin: 10px 0; }
+        #receipt-preview::before {
+            content: ''; position: absolute; top: -4px; left: 0; right: 0; height: 4px; background: linear-gradient(-45deg, transparent 33.33%, #ffffff 33.33%, #ffffff 66.66%, transparent 66.66%), linear-gradient(45deg, transparent 33.33%, #ffffff 33.33%, #ffffff 66.66%, transparent 66.66%); background-size: 8px 16px;
+        }
+        
+        .receipt-header { text-align: center; font-weight: 800; font-size: 22px; margin-bottom: 4px;}
+        .receipt-subheader { text-align: center; font-size: 14px; margin-bottom: 12px; color: #444; }
+        .receipt-divider { border-top: 2px dashed #000; margin: 12px 0; }
         .receipt-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
-        .receipt-label { font-weight: 700; font-size: 15px; }
-        .receipt-value { font-weight: 600; text-align: right; font-size: 15px; }
-        .big-amount-row { text-align: center; border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 10px 0; margin: 12px 0; }
-        .big-amount-value { font-size: 32px; font-weight: 900; }
-        .receipt-footer { text-align: center; margin-top: 20px; font-weight: 700; }
+        .receipt-label { font-weight: 700; font-size: 14px; color: #222; }
+        .receipt-value { font-weight: 600; text-align: right; font-size: 14px; }
+        .big-amount-row { text-align: center; border-top: 1.5px solid #000; border-bottom: 1.5px solid #000; padding: 12px 0; margin: 16px 0; }
+        .big-amount-value { font-size: 32px; font-weight: 900; margin-top: 4px;}
+        .receipt-footer { text-align: center; margin-top: 24px; font-weight: 700; font-size: 14px; }
+
+        /* --- SCROLLBAR STYLING --- */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
 
         /* --- PROFESSIONAL PRINT STYLES --- */
         @media print {
-            .input-panel, h1 { display: none !important; }
+            .input-panel, .history-panel, .header-container, .receipt-badge { display: none !important; }
             body { background: none; padding: 0; margin: 0; }
             #receipt-preview { 
                 width: 58mm; 
@@ -84,6 +217,7 @@
                 font-size: 15px; 
                 line-height: 1.4;
             }
+            #receipt-preview::before { display: none; }
             .receipt-header { font-size: 20px !important; font-weight: 800; margin-bottom: 1mm; } 
             .receipt-subheader { font-size: 14px; font-weight: 400; margin-bottom: 2mm; }
             .receipt-row { margin-bottom: 4px; }
@@ -99,13 +233,28 @@
 </head>
 <body>
 
-    <h1>साहू ग्राहक सेवा केंद्र, मोपका</h1>
+    <div class="header-container">
+        <h1>साहू ग्राहक सेवा केंद्र, मोपका</h1>
+        <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">
+            🌙 Dark Mode
+        </button>
+    </div>
 
     <div class="screen-wrapper">
-        <div class="input-panel">
+        
+        <div class="panel history-panel">
+            <h2>पिछला रिकॉर्ड (History)</h2>
+            <div class="history-controls">
+                <input type="date" id="historyDate" onchange="renderHistory()">
+                <input type="text" id="historySearch" placeholder="सर्च करें (नाम, आधार, बैंक...)" oninput="renderHistory()">
+            </div>
+            <div id="historyList"></div>
+        </div>
+
+        <div class="panel input-panel">
             <div class="major-tabs">
                 <button class="major-btn active" id="btnAuto" onclick="setMajorTab('auto')">Automatic</button>
-                <button class="major-btn" id="btnManual" onclick="setMajorTab('manual')">Manual</button>
+                <button class="major-btn" id="btnManual" onclick="setMajorTab('manual')">Manual Entry</button>
             </div>
 
             <div id="auto-controls">
@@ -116,11 +265,11 @@
                 </div>
                 <div class="form-group">
                     <label>ग्राहक का नाम</label>
-                    <input type="text" id="genName" class="clearable" oninput="updateReceipt()">
+                    <input type="text" id="genName" class="clearable" placeholder="Enter name" oninput="updateReceipt()">
                 </div>
                 <div class="form-group">
                     <label id="autoPasteLabel">निकासी मैसेज पेस्ट करें</label>
-                    <textarea id="genRawText" class="clearable" placeholder="Paste message here..." oninput="updateReceipt()" style="min-height: 100px;"></textarea>
+                    <textarea id="genRawText" class="clearable" placeholder="Paste transaction message here..." oninput="updateReceipt()" style="min-height: 120px;"></textarea>
                 </div>
                 <div class="form-group" id="autoTotalGroup" style="display:none">
                     <label>कुल राशि (Total Balance)</label>
@@ -129,11 +278,12 @@
             </div>
 
             <div id="manual-controls" style="display:none">
-                <label style="font-size: 14px; font-weight: 600; display: block; margin-bottom: 8px;">मोड चुनें</label>
+                <label style="font-size: 13px; font-weight: 600; display: block; margin-bottom: 8px; color: var(--text-secondary); text-transform: uppercase;">मोड चुनें</label>
                 <div class="sub-tabs">
                     <button id="mATM" class="sub-btn active" onclick="setManualMode('ATM')">ATM</button>
-                    <button id="mDep" class="sub-btn" onclick="setManualMode('AEPS Deposit')">AEPS Deposit</button>
-                    <button id="mWith" class="sub-btn" onclick="setManualMode('AEPS Withdrawal')">AEPS Withdrawal</button>
+                    <button id="mDep" class="sub-btn" onclick="setManualMode('AEPS Deposit')">Deposit</button>
+                    <button id="mWith" class="sub-btn" onclick="setManualMode('AEPS Withdrawal')">Withdrawal</button>
+                    <button id="mUPI" class="sub-btn" onclick="setManualMode('UPI')">UPI</button>
                 </div>
                 <div class="form-group"><label>ग्राहक का नाम</label><input type="text" id="inName" class="clearable" oninput="updateReceipt()"></div>
                 <div class="form-group" id="mAadhaarGroup" style="display:none"><label>आधार नंबर</label><input type="text" id="inAadhaar" class="clearable" oninput="updateReceipt()"></div>
@@ -143,7 +293,7 @@
                 <div class="form-group"><label id="manualTotalLabel">शेष राशि</label><input type="text" id="inTotal" class="clearable" oninput="updateReceipt()"></div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" style="margin-top: 10px;">
                 <label>रसीद संख्या</label>
                 <input type="number" id="inReceiptNo" oninput="updateReceiptNo(this.value)">
             </div>
@@ -154,40 +304,67 @@
             </div>
         </div>
 
-        <div id="receipt-preview">
-            <div class="receipt-header">साहू ग्राहक सेवा केंद्र, मोपका</div>
-            <div class="receipt-subheader"><span id="outTime">लोड हो रहा है...</span></div>
-            <div class="receipt-divider"></div>
+        <div class="receipt-container">
+            <span class="receipt-badge">Live Preview</span>
+            <div id="receipt-preview">
+                <div class="receipt-header">साहू ग्राहक सेवा केंद्र, मोपका</div>
+                <div class="receipt-subheader"><span id="outTime">लोड हो रहा है...</span></div>
+                <div class="receipt-divider"></div>
 
-            <div class="receipt-row"><span class="receipt-label">ग्राहक का नाम</span><span class="receipt-value" id="outName">-----</span></div>
-            <div class="receipt-row"><span class="receipt-label">रसीद संख्या</span><span class="receipt-value" id="outReceiptNo">0001</span></div>
-            <div class="receipt-row"><span class="receipt-label">मोड</span><span class="receipt-value" id="outMode">ATM</span></div>
-            
-            <div class="receipt-row" id="outBeneRow" style="display:none"><span class="receipt-label">प्राप्तकर्ता</span><span class="receipt-value" id="outBene">-----</span></div>
-            <div class="receipt-row" id="outAccRow" style="display:none"><span class="receipt-label">खाता संख्या</span><span class="receipt-value" id="outAcc">-----</span></div>
-            
-            <div class="receipt-row" id="outAadhaarRow" style="display:none"><span class="receipt-label">आधार नंबर</span><span class="receipt-value" id="outAadhaar">-----</span></div>
-            <div class="receipt-row"><span class="receipt-label">बैंक</span><span class="receipt-value" id="outBank">-----</span></div>
-            <div class="receipt-row"><span class="receipt-label">ट्रांजैक्शन आईडी</span><span class="receipt-value" id="outTxn">-----</span></div>
+                <div class="receipt-row"><span class="receipt-label">ग्राहक का नाम</span><span class="receipt-value" id="outName">-----</span></div>
+                <div class="receipt-row"><span class="receipt-label">रसीद संख्या</span><span class="receipt-value" id="outReceiptNo">0001</span></div>
+                <div class="receipt-row"><span class="receipt-label">मोड</span><span class="receipt-value" id="outMode">ATM</span></div>
+                
+                <div class="receipt-row" id="outBeneRow" style="display:none"><span class="receipt-label">प्राप्तकर्ता</span><span class="receipt-value" id="outBene">-----</span></div>
+                <div class="receipt-row" id="outAccRow" style="display:none"><span class="receipt-label">खाता संख्या</span><span class="receipt-value" id="outAcc">-----</span></div>
+                
+                <div class="receipt-row" id="outAadhaarRow" style="display:none"><span class="receipt-label">आधार नंबर</span><span class="receipt-value" id="outAadhaar">-----</span></div>
+                <div class="receipt-row"><span class="receipt-label">बैंक</span><span class="receipt-value" id="outBank">-----</span></div>
+                <div class="receipt-row"><span class="receipt-label">ट्रांजैक्शन आईडी</span><span class="receipt-value" id="outTxn">-----</span></div>
 
-            <div class="big-amount-row">
-                <span class="receipt-label" id="outAmtLabel">निकासी राशि</span>
-                <div class="big-amount-value">₹<span id="outAmt">0</span></div>
+                <div class="big-amount-row">
+                    <span class="receipt-label" id="outAmtLabel">निकासी राशि</span>
+                    <div class="big-amount-value">₹<span id="outAmt">0</span></div>
+                </div>
+
+                <div class="receipt-row"><span class="receipt-label" id="outTotalLabel">शेष राशि</span><span class="receipt-value">₹<span id="outTotal">0.00</span></span></div>
+
+                <div class="receipt-divider"></div>
+                <div class="receipt-footer">धन्यवाद, कृपया पुनः पधारे 🙏</div>
             </div>
-
-            <div class="receipt-row"><span class="receipt-label" id="outTotalLabel">शेष राशि</span><span class="receipt-value">₹<span id="outTotal">0.00</span></span></div>
-
-            <div class="receipt-divider"></div>
-            <div class="receipt-footer">धन्यवाद ,कृपया पुनः पधारे 🙏</div>
         </div>
+
     </div>
 
     <script>
+        // --- THEME LOGIC ---
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('sahu_theme', newTheme);
+            updateThemeButtonText(newTheme);
+        }
+
+        function updateThemeButtonText(theme) {
+            const btn = document.getElementById('themeBtn');
+            btn.innerHTML = theme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+        }
+
+        // Initialize Theme on Load
+        const savedTheme = localStorage.getItem('sahu_theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        updateThemeButtonText(savedTheme);
+
+
+        // --- EXISTING LOGIC PRESERVED STRICTLY ---
         let majorTab = 'auto';
         let autoSub = 'withdraw';
         let manualMode = 'ATM';
+        
+        let receiptHistory = JSON.parse(localStorage.getItem('receiptHistory') || '[]');
 
-        // Helper to format numbers with commas
         function formatNumber(val) {
             if (!val || isNaN(val.toString().replace(/,/g, ''))) return val;
             let num = val.toString().replace(/,/g, '');
@@ -226,15 +403,20 @@
             document.getElementById('mATM').classList.toggle('active', m === 'ATM');
             document.getElementById('mDep').classList.toggle('active', m === 'AEPS Deposit');
             document.getElementById('mWith').classList.toggle('active', m === 'AEPS Withdrawal');
-            document.getElementById('mAadhaarGroup').style.display = (m === 'ATM' ? 'none' : 'block');
-            document.getElementById('manualAmtLabel').textContent = (m === 'AEPS Deposit' ? 'जमा राशि' : 'निकासी राशि');
+            document.getElementById('mUPI').classList.toggle('active', m === 'UPI'); // UPI Logic added
+            
+            // Hides Aadhaar if ATM OR UPI
+            document.getElementById('mAadhaarGroup').style.display = (m === 'ATM' || m === 'UPI' ? 'none' : 'block');
+            
+            // Updates Amount Label based on Mode
+            document.getElementById('manualAmtLabel').textContent = (m === 'AEPS Deposit' ? 'जमा राशि' : (m === 'UPI' ? 'UPI राशि' : 'निकासी राशि'));
             document.getElementById('manualTotalLabel').textContent = (m === 'AEPS Deposit' ? 'कुल राशि' : 'शेष राशि');
             updateReceipt();
         }
 
         function parseAuto() {
             const raw = document.getElementById('genRawText').value || '';
-            const res = { bank: '-----', amt: '0', total: '0.00', txn: '-----', aadhaar: '-----', bene: '-----', acc: '-----' };
+            const res = { bank: '-----', amt: '0', total: '0.00', txn: '-----', aadhaar: '-----', bene: '-----', acc: '-----', name: '' };
             
             if (autoSub === 'transfer') {
                 const lines = raw.split('\n');
@@ -253,8 +435,7 @@
                 if (details['Bene Account No.']) res.acc = details['Bene Account No.'];
                 if (details['Total Amt']) res.total = details['Total Amt'].replace('₹', '');
                 if (details['Customer Name & Mobile']) {
-                    const namePart = details['Customer Name & Mobile'].split(' - ')[0];
-                    if(!document.getElementById('genName').value) document.getElementById('genName').value = namePart;
+                    res.name = details['Customer Name & Mobile'].split(' - ')[0]; 
                 }
             } else {
                 const bankMatch = raw.match(/(?:Bank Name[:\s]+|Customer Bank Name\s+)([^\n\r]+)/i);
@@ -262,12 +443,14 @@
                 const txnMatch = raw.match(/Transaction ID\s+([0-9]+)/i);
                 const aadharMatch = raw.match(/Aadhaar Number\s+([xX0-9 ]+)/i);
                 const totalMatch = raw.match(/(?:Available Balance|Balance)[:\s]+([0-9.,NA]+)/i);
+                const nameMatch = raw.match(/Customer Name\s+([^\n\r]+)/i);
 
                 if (bankMatch) res.bank = bankMatch[1].trim();
                 if (amtMatch) res.amt = amtMatch[1];
                 if (txnMatch) res.txn = txnMatch[1];
                 if (aadharMatch) res.aadhaar = aadharMatch[1].trim();
                 if (totalMatch && totalMatch[1] !== 'NA') res.total = totalMatch[1];
+                if (nameMatch) res.name = nameMatch[1].trim(); 
             }
             
             return res;
@@ -278,17 +461,23 @@
 
             if (majorTab === 'auto') {
                 const p = parseAuto();
+
+                if (p.name && document.activeElement === document.getElementById('genRawText')) {
+                    document.getElementById('genName').value = p.name;
+                }
+
                 isDeposit = (autoSub === 'deposit');
                 isTransfer = (autoSub === 'transfer');
                 mode = isTransfer ? 'Money Transfer' : (isDeposit ? 'AEPS Deposit' : 'AEPS Withdrawal');
-                name = document.getElementById('genName').value || '-----';
+                
+                name = document.getElementById('genName').value || p.name || '-----';
                 bank = p.bank; amt = p.amt; txn = p.txn; aadhaar = p.aadhaar;
                 bene = p.bene; acc = p.acc;
                 total = (isDeposit || isTransfer) ? (document.getElementById('autoTotalInput').value || p.total) : p.total;
             } else {
                 isDeposit = (manualMode === 'AEPS Deposit');
                 isTransfer = false;
-                mode = manualMode;
+                mode = manualMode; // Automatically handles 'UPI' since manualMode = 'UPI'
                 name = document.getElementById('inName').value || '-----';
                 bank = document.getElementById('inBank').value || '-----';
                 amt = document.getElementById('inAmt').value || '0';
@@ -305,13 +494,15 @@
             document.getElementById('outTxn').textContent = txn;
             document.getElementById('outAadhaar').textContent = aadhaar;
             
-            document.getElementById('outAadhaarRow').style.display = (mode === 'ATM' || isTransfer ? 'none' : 'flex');
+            // Hides Aadhaar row for ATM OR UPI OR Transfer
+            document.getElementById('outAadhaarRow').style.display = (mode === 'ATM' || mode === 'UPI' || isTransfer ? 'none' : 'flex');
             document.getElementById('outBeneRow').style.display = (isTransfer ? 'flex' : 'none');
             document.getElementById('outAccRow').style.display = (isTransfer ? 'flex' : 'none');
             document.getElementById('outBene').textContent = bene;
             document.getElementById('outAcc').textContent = acc;
             
-            document.getElementById('outAmtLabel').textContent = isDeposit ? 'जमा राशि' : (isTransfer ? 'ट्रांसफर राशि' : 'निकासी राशि');
+            // Dynamically set Amount Label
+            document.getElementById('outAmtLabel').textContent = isDeposit ? 'जमा राशि' : (isTransfer ? 'ट्रांसफर राशि' : (mode === 'UPI' ? 'UPI राशि' : 'निकासी राशि'));
             document.getElementById('outTotalLabel').textContent = isDeposit || isTransfer ? 'कुल राशि' : 'शेष राशि';
         }
 
@@ -320,7 +511,88 @@
             localStorage.setItem('rNo', v);
         }
 
+        function saveToHistory() {
+            const rNo = document.getElementById('outReceiptNo').textContent;
+            const name = document.getElementById('outName').textContent;
+            const mode = document.getElementById('outMode').textContent;
+            const amt = document.getElementById('outAmt').textContent;
+            const bank = document.getElementById('outBank').textContent;
+            const txn = document.getElementById('outTxn').textContent;
+            const aadhaar = document.getElementById('outAadhaar').textContent;
+            
+            const now = new Date();
+            const dateStr = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+            const fullDate = document.getElementById('outTime').textContent;
+
+            const entry = { rNo, name, mode, amt, bank, txn, aadhaar, dateStr, fullDate };
+            
+            const existingIndex = receiptHistory.findIndex(i => i.rNo === rNo);
+            if (existingIndex >= 0) {
+                receiptHistory[existingIndex] = entry; 
+            } else {
+                receiptHistory.push(entry);
+            }
+
+            localStorage.setItem('receiptHistory', JSON.stringify(receiptHistory));
+            renderHistory();
+        }
+
+        function renderHistory() {
+            const list = document.getElementById('historyList');
+            const dateFilter = document.getElementById('historyDate').value;
+            const searchFilter = document.getElementById('historySearch').value.toLowerCase();
+
+            list.innerHTML = '';
+            
+            let filtered = receiptHistory.filter(item => {
+                let matchDate = dateFilter ? item.dateStr === dateFilter : true;
+                let searchString = `${item.rNo} ${item.name} ${item.mode} ${item.amt} ${item.bank} ${item.txn} ${item.aadhaar}`.toLowerCase();
+                let matchSearch = searchFilter ? searchString.includes(searchFilter) : true;
+                return matchDate && matchSearch;
+            });
+
+            [...filtered].reverse().forEach(item => {
+                list.innerHTML += `
+                    <div class="history-item">
+                        <strong>${item.name}</strong>
+                        <div style="margin-bottom: 2px;">मोड: ${item.mode}</div>
+                        <div style="margin-bottom: 2px;">बैंक: ${item.bank}</div>
+                        <div>राशि: ₹${item.amt}</div>
+                        <button class="view-print-btn" onclick="viewAndPrint('${item.rNo}')">View & Print Receipt</button>
+                    </div>
+                `;
+            });
+        }
+
+        function viewHistoryItem(rNo) {
+            const item = receiptHistory.find(i => i.rNo === rNo);
+            if(!item) return;
+
+            document.getElementById('outReceiptNo').textContent = item.rNo;
+            document.getElementById('outName').textContent = item.name;
+            document.getElementById('outMode').textContent = item.mode;
+            document.getElementById('outBank').textContent = item.bank;
+            document.getElementById('outAmt').textContent = item.amt;
+            document.getElementById('outTxn').textContent = item.txn;
+            document.getElementById('outAadhaar').textContent = item.aadhaar;
+            document.getElementById('outTime').textContent = item.fullDate;
+            
+            document.getElementById('outAadhaarRow').style.display = (item.aadhaar !== '-----' && item.mode !== 'UPI' ? 'flex' : 'none');
+            document.getElementById('outBeneRow').style.display = 'none';
+            document.getElementById('outAccRow').style.display = 'none';
+            
+            document.getElementById('outAmtLabel').textContent = (item.mode === 'AEPS Deposit') ? 'जमा राशि' : (item.mode === 'Money Transfer' ? 'ट्रांसफर राशि' : (item.mode === 'UPI' ? 'UPI राशि' : 'निकासी राशि'));
+        }
+
+        function viewAndPrint(rNo) {
+            viewHistoryItem(rNo);
+            setTimeout(() => {
+                window.print();
+            }, 100);
+        }
+
         function handlePrint() {
+            saveToHistory(); 
             window.print();
             let n = parseInt(localStorage.getItem('rNo') || '1') + 1;
             updateReceiptNo(n.toString());
@@ -341,6 +613,8 @@
         document.getElementById('inReceiptNo').value = saved;
         updateReceiptNo(saved);
         setMajorTab('auto');
+        
+        renderHistory();
     </script>
 </body>
 </html>
