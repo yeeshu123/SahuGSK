@@ -20,14 +20,12 @@
 
         .screen-wrapper {
             display: flex;
-            gap: 30px;
-            flex-wrap: nowrap;
+            gap: 40px;
+            flex-wrap: wrap;
             justify-content: center;
             align-items: flex-start;
             width: 100%;
-            max-width: 1400px;
-            overflow-x: auto;
-            padding-bottom: 20px;
+            max-width: 1200px;
         }
 
         .input-panel {
@@ -36,7 +34,6 @@
             border-radius: 16px;
             box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12);
             width: 480px;
-            min-width: 480px;
             border-top: 3px solid #2563eb;
             transition: background 0.3s, box-shadow 0.3s;
         }
@@ -54,16 +51,32 @@
         .major-btn.active { background: #2563eb; color: white; }
 
         .sub-tabs { display: flex; gap: 5px; background: #f1f5f9; padding: 5px; border-radius: 999px; margin-bottom: 20px; transition: background 0.3s; }
-        .sub-btn { flex: 1; border: none; background: transparent; padding: 8px; font-size: 12px; font-weight: 600; cursor: pointer; border-radius: 999px; transition: background 0.3s, color 0.3s; color: #374151; }
+        .sub-btn { flex: 1; border: none; background: transparent; padding: 8px; font-size: 12px; font-weight: 600; cursor: pointer; border-radius: 999px; transition: color 0.3s; }
         .sub-btn.active { background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); color: #2563eb; }
 
         .button-group { display: flex; gap: 12px; margin-top: 10px; }
         .print-btn { background: linear-gradient(135deg, #16a34a, #22c55e); color: white; border: none; padding: 16px 20px; flex: 2; cursor: pointer; font-size: 18px; font-weight: 700; border-radius: 999px; box-shadow: 0 8px 18px rgba(22, 163, 74, 0.35); }
         .clear-btn { background: #ef4444; color: white; border: none; padding: 16px; flex: 1; cursor: pointer; font-size: 14px; font-weight: 700; border-radius: 999px; }
 
+        /* --- THEME TOGGLE --- */
+        .theme-toggle { position: absolute; top: 20px; right: 20px; background: #ffffff; border: 1px solid #d1d5db; padding: 8px 16px; border-radius: 999px; cursor: pointer; font-weight: 600; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: background 0.3s, color 0.3s; }
+
+        /* --- DARK MODE --- */
+        body.dark-mode { background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%); color: #f8fafc; }
+        body.dark-mode h1 { color: #f8fafc; }
+        body.dark-mode .theme-toggle { background: #1e293b; color: #f8fafc; border-color: #334155; }
+        body.dark-mode .input-panel { background: #1e293b; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5); }
+        body.dark-mode .form-group label { color: #cbd5e1; }
+        body.dark-mode .form-group input, body.dark-mode .form-group textarea { background: #0f172a; color: #f8fafc; border-color: #334155; }
+        body.dark-mode .major-btn { background: #1e293b; }
+        body.dark-mode .major-btn.active { background: #3b82f6; color: white; border-color: #3b82f6; }
+        body.dark-mode .sub-tabs { background: #0f172a; }
+        body.dark-mode .sub-btn { color: #94a3b8; }
+        body.dark-mode .sub-btn.active { background: #1e293b; color: #60a5fa; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+
         /* --- RECEIPT PREVIEW (SCREEN) --- */
         #receipt-preview {
-            background: #ffffff; width: 80mm; min-width: 80mm; padding: 6mm; border-radius: 10px; border: 1px solid #e5e7eb; color: #000; line-height: 1.6;
+            background: #ffffff; width: 80mm; padding: 6mm; border-radius: 10px; border: 1px solid #e5e7eb; color: #000; line-height: 1.6;
         }
         .receipt-header { text-align: center; font-weight: 800; font-size: 22px; }
         .receipt-subheader { text-align: center; font-size: 15px; margin-bottom: 10px; }
@@ -75,67 +88,9 @@
         .big-amount-value { font-size: 32px; font-weight: 900; }
         .receipt-footer { text-align: center; margin-top: 20px; font-weight: 700; }
 
-        /* --- HISTORY PANEL STYLES --- */
-        .history-panel {
-            background: #ffffff;
-            padding: 24px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12);
-            width: 320px;
-            min-width: 320px; 
-            border-top: 3px solid #8b5cf6;
-            display: flex;
-            flex-direction: column;
-            max-height: 800px;
-            transition: background 0.3s, box-shadow 0.3s;
-        }
-        .history-panel h2 { margin: 0 0 16px 0; font-size: 20px; color: #374151; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; transition: color 0.3s, border-color 0.3s; }
-        .history-controls { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
-        .history-controls input { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; transition: background 0.3s, color 0.3s; }
-        #historyList { overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 10px; padding-right: 5px; }
-        .history-item { background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0; font-size: 13px; line-height: 1.5; transition: background 0.3s, border-color 0.3s; }
-        .history-item strong { color: #1e293b; font-size: 14px; display: block; margin-bottom: 4px; transition: color 0.3s; }
-        
-        .view-print-btn {
-            margin-top: 10px;
-            background: #e2e8f0;
-            color: #1e293b;
-            border: 1px solid #cbd5e1;
-            padding: 6px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
-            width: 100%;
-            transition: background 0.2s, color 0.3s;
-        }
-        .view-print-btn:hover { background: #cbd5e1; }
-
-        /* --- DARK MODE STYLES --- */
-        .theme-toggle {
-            position: absolute; top: 20px; right: 20px; background: #1f3b5b; color: #fff; border: none;
-            padding: 10px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: background 0.3s;
-        }
-        body.dark-mode { background: linear-gradient(135deg, #121212 0%, #1e1e1e 100%); color: #e5e7eb; }
-        body.dark-mode h1 { color: #e5e7eb; }
-        body.dark-mode .theme-toggle { background: #e5e7eb; color: #121212; }
-        body.dark-mode .input-panel, body.dark-mode .history-panel { background: #1e293b; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5); }
-        body.dark-mode .form-group label, body.dark-mode .history-panel h2 { color: #cbd5e1; border-color: #334155; }
-        body.dark-mode .form-group input, body.dark-mode .form-group textarea, body.dark-mode .history-controls input { background: #0f172a; color: #f8fafc; border-color: #334155; }
-        body.dark-mode .major-btn { background: #1e293b; color: #60a5fa; border-color: #60a5fa; }
-        body.dark-mode .major-btn.active { background: #60a5fa; color: #0f172a; }
-        body.dark-mode .sub-tabs { background: #0f172a; }
-        body.dark-mode .sub-btn { color: #94a3b8; }
-        body.dark-mode .sub-btn.active { background: #1e293b; color: #60a5fa; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
-        body.dark-mode .history-item { background: #0f172a; border-color: #334155; color: #cbd5e1; }
-        body.dark-mode .history-item strong { color: #f8fafc; }
-        body.dark-mode .view-print-btn { background: #334155; color: #f8fafc; border-color: #475569; }
-        body.dark-mode .view-print-btn:hover { background: #475569; }
-
         /* --- PROFESSIONAL PRINT STYLES --- */
         @media print {
-            .input-panel, .history-panel, h1, .theme-toggle { display: none !important; }
+            .input-panel, h1, .theme-toggle { display: none !important; }
             body { background: none; padding: 0; margin: 0; }
             #receipt-preview { 
                 width: 58mm; 
@@ -163,21 +118,11 @@
 </head>
 <body>
 
-    <button class="theme-toggle" onclick="toggleDarkMode()">🌙 Dark / Light</button>
+    <button class="theme-toggle" onclick="toggleTheme()">🌓 डार्क मोड</button>
 
     <h1>साहू ग्राहक सेवा केंद्र, मोपका</h1>
 
     <div class="screen-wrapper">
-        
-        <div class="history-panel">
-            <h2>पिछला रिकॉर्ड (History)</h2>
-            <div class="history-controls">
-                <input type="date" id="historyDate" onchange="renderHistory()">
-                <input type="text" id="historySearch" placeholder="सर्च करें (नाम, आधार, बैंक, txn...)" oninput="renderHistory()">
-            </div>
-            <div id="historyList"></div>
-        </div>
-
         <div class="input-panel">
             <div class="major-tabs">
                 <button class="major-btn active" id="btnAuto" onclick="setMajorTab('auto')">Automatic</button>
@@ -214,13 +159,12 @@
                 </div>
                 <div class="form-group"><label>ग्राहक का नाम</label><input type="text" id="inName" class="clearable" oninput="updateReceipt()"></div>
                 
-                <div class="form-group" id="mReceiverGroup" style="display:none"><label>Receiver Name (प्राप्तकर्ता)</label><input type="text" id="inReceiver" class="clearable" oninput="updateReceipt()"></div>
+                <div class="form-group" id="mRecipientGroup" style="display:none"><label>प्राप्तकर्ता का नाम</label><input type="text" id="inRecipient" class="clearable" oninput="updateReceipt()"></div>
+                
                 <div class="form-group" id="mAadhaarGroup" style="display:none"><label>आधार नंबर</label><input type="text" id="inAadhaar" class="clearable" oninput="updateReceipt()"></div>
                 <div class="form-group" id="mBankGroup"><label>बैंक का नाम</label><input type="text" id="inBank" class="clearable" oninput="updateReceipt()"></div>
                 <div class="form-group" id="mTxnGroup"><label>ट्रांजैक्शन आईडी</label><input type="text" id="inTxn" class="clearable" oninput="updateReceipt()"></div>
-                
                 <div class="form-group"><label id="manualAmtLabel">राशि</label><input type="number" id="inAmt" class="clearable" oninput="updateReceipt()"></div>
-                
                 <div class="form-group" id="mTotalGroup"><label id="manualTotalLabel">शेष राशि</label><input type="text" id="inTotal" class="clearable" oninput="updateReceipt()"></div>
             </div>
 
@@ -261,20 +205,18 @@
             <div class="receipt-divider"></div>
             <div class="receipt-footer">धन्यवाद ,कृपया पुनः पधारे 🙏</div>
         </div>
-
     </div>
 
     <script>
         let majorTab = 'auto';
         let autoSub = 'withdraw';
         let manualMode = 'ATM';
-        
-        let receiptHistory = JSON.parse(localStorage.getItem('receiptHistory') || '[]');
 
-        function toggleDarkMode() {
+        function toggleTheme() {
             document.body.classList.toggle('dark-mode');
         }
 
+        // Helper to format numbers with commas
         function formatNumber(val) {
             if (!val || isNaN(val.toString().replace(/,/g, ''))) return val;
             let num = val.toString().replace(/,/g, '');
@@ -315,21 +257,26 @@
             document.getElementById('mWith').classList.toggle('active', m === 'AEPS Withdrawal');
             document.getElementById('mUPI').classList.toggle('active', m === 'UPI');
             
-            let isUPI = (m === 'UPI');
+            const isUPI = (m === 'UPI');
+            
             document.getElementById('mAadhaarGroup').style.display = (m === 'ATM' || isUPI ? 'none' : 'block');
-            document.getElementById('mBankGroup').style.display = isUPI ? 'none' : 'block';
-            document.getElementById('mTxnGroup').style.display = isUPI ? 'none' : 'block';
-            document.getElementById('mTotalGroup').style.display = isUPI ? 'none' : 'block';
-            document.getElementById('mReceiverGroup').style.display = isUPI ? 'block' : 'none';
+            document.getElementById('mBankGroup').style.display = (isUPI ? 'none' : 'block');
+            document.getElementById('mTxnGroup').style.display = (isUPI ? 'none' : 'block');
+            document.getElementById('mTotalGroup').style.display = (isUPI ? 'none' : 'block');
+            document.getElementById('mRecipientGroup').style.display = (isUPI ? 'block' : 'none');
 
-            document.getElementById('manualAmtLabel').textContent = (m === 'AEPS Deposit' ? 'जमा राशि' : (isUPI ? 'राशि' : 'निकासी राशि'));
+            let amtLabel = 'निकासी राशि';
+            if(m === 'AEPS Deposit') amtLabel = 'जमा राशि';
+            if(isUPI) amtLabel = 'UPI राशि';
+            document.getElementById('manualAmtLabel').textContent = amtLabel;
+            
             document.getElementById('manualTotalLabel').textContent = (m === 'AEPS Deposit' ? 'कुल राशि' : 'शेष राशि');
             updateReceipt();
         }
 
         function parseAuto() {
             const raw = document.getElementById('genRawText').value || '';
-            const res = { bank: '-----', amt: '0', total: '0.00', txn: '-----', aadhaar: '-----', bene: '-----', acc: '-----', name: '' };
+            const res = { bank: '-----', amt: '0', total: '0.00', txn: '-----', aadhaar: '-----', bene: '-----', acc: '-----' };
             
             if (autoSub === 'transfer') {
                 const lines = raw.split('\n');
@@ -348,7 +295,8 @@
                 if (details['Bene Account No.']) res.acc = details['Bene Account No.'];
                 if (details['Total Amt']) res.total = details['Total Amt'].replace('₹', '');
                 if (details['Customer Name & Mobile']) {
-                    res.name = details['Customer Name & Mobile'].split(' - ')[0]; 
+                    const namePart = details['Customer Name & Mobile'].split(' - ')[0];
+                    if(!document.getElementById('genName').value) document.getElementById('genName').value = namePart;
                 }
             } else {
                 const bankMatch = raw.match(/(?:Bank Name[:\s]+|Customer Bank Name\s+)([^\n\r]+)/i);
@@ -363,35 +311,31 @@
                 if (txnMatch) res.txn = txnMatch[1];
                 if (aadharMatch) res.aadhaar = aadharMatch[1].trim();
                 if (totalMatch && totalMatch[1] !== 'NA') res.total = totalMatch[1];
-                if (nameMatch) res.name = nameMatch[1].trim(); 
+                
+                // Fetch name automatically if it exists in text and user hasn't typed one
+                if (nameMatch && !document.getElementById('genName').value) {
+                    document.getElementById('genName').value = nameMatch[1].trim();
+                }
             }
             
             return res;
         }
 
         function updateReceipt() {
-            let name, bank, mode, amt, total, aadhaar, txn, bene, acc, isDeposit, isTransfer, isUPI;
+            let name, bank, mode, amt, total, aadhaar, txn, bene, acc, isDeposit, isTransfer;
 
             if (majorTab === 'auto') {
                 const p = parseAuto();
-
-                if (p.name && document.activeElement === document.getElementById('genRawText')) {
-                    document.getElementById('genName').value = p.name;
-                }
-
                 isDeposit = (autoSub === 'deposit');
                 isTransfer = (autoSub === 'transfer');
-                isUPI = false;
                 mode = isTransfer ? 'Money Transfer' : (isDeposit ? 'AEPS Deposit' : 'AEPS Withdrawal');
-                
-                name = document.getElementById('genName').value || p.name || '-----';
+                name = document.getElementById('genName').value || '-----';
                 bank = p.bank; amt = p.amt; txn = p.txn; aadhaar = p.aadhaar;
                 bene = p.bene; acc = p.acc;
                 total = (isDeposit || isTransfer) ? (document.getElementById('autoTotalInput').value || p.total) : p.total;
             } else {
                 isDeposit = (manualMode === 'AEPS Deposit');
                 isTransfer = false;
-                isUPI = (manualMode === 'UPI');
                 mode = manualMode;
                 name = document.getElementById('inName').value || '-----';
                 bank = document.getElementById('inBank').value || '-----';
@@ -399,7 +343,7 @@
                 total = document.getElementById('inTotal').value || '0.00';
                 txn = document.getElementById('inTxn').value || '-----';
                 aadhaar = document.getElementById('inAadhaar').value || '-----';
-                bene = document.getElementById('inReceiver').value || '-----';
+                bene = (manualMode === 'UPI') ? (document.getElementById('inRecipient').value || '-----') : '-----';
             }
 
             document.getElementById('outName').textContent = name;
@@ -410,17 +354,18 @@
             document.getElementById('outTxn').textContent = txn;
             document.getElementById('outAadhaar').textContent = aadhaar;
             
-            document.getElementById('outAadhaarRow').style.display = (mode === 'ATM' || isTransfer || isUPI ? 'none' : 'flex');
-            document.getElementById('outBeneRow').style.display = (isTransfer || isUPI ? 'flex' : 'none');
+            document.getElementById('outAadhaarRow').style.display = (mode === 'ATM' || mode === 'UPI' || isTransfer ? 'none' : 'flex');
+            document.getElementById('outBeneRow').style.display = (isTransfer || mode === 'UPI' ? 'flex' : 'none');
             document.getElementById('outAccRow').style.display = (isTransfer ? 'flex' : 'none');
-            document.getElementById('outBankRow').style.display = (isUPI ? 'none' : 'flex');
-            document.getElementById('outTxnRow').style.display = (isUPI ? 'none' : 'flex');
-            document.getElementById('outTotalRow').style.display = (isUPI ? 'none' : 'flex');
-
+            
+            document.getElementById('outBankRow').style.display = (mode === 'UPI' ? 'none' : 'flex');
+            document.getElementById('outTxnRow').style.display = (mode === 'UPI' ? 'none' : 'flex');
+            document.getElementById('outTotalRow').style.display = (mode === 'UPI' ? 'none' : 'flex');
+            
             document.getElementById('outBene').textContent = bene;
             document.getElementById('outAcc').textContent = acc;
             
-            document.getElementById('outAmtLabel').textContent = isDeposit ? 'जमा राशि' : (isTransfer ? 'ट्रांसफर राशि' : (isUPI ? 'राशि' : 'निकासी राशि'));
+            document.getElementById('outAmtLabel').textContent = isDeposit ? 'जमा राशि' : (isTransfer ? 'ट्रांसफर राशि' : (mode === 'UPI' ? 'UPI राशि' : 'निकासी राशि'));
             document.getElementById('outTotalLabel').textContent = isDeposit || isTransfer ? 'कुल राशि' : 'शेष राशि';
         }
 
@@ -429,90 +374,7 @@
             localStorage.setItem('rNo', v);
         }
 
-        function saveToHistory() {
-            const rNo = document.getElementById('outReceiptNo').textContent;
-            const name = document.getElementById('outName').textContent;
-            const mode = document.getElementById('outMode').textContent;
-            const amt = document.getElementById('outAmt').textContent;
-            const bank = document.getElementById('outBank').textContent;
-            const txn = document.getElementById('outTxn').textContent;
-            const aadhaar = document.getElementById('outAadhaar').textContent;
-            
-            const now = new Date();
-            const dateStr = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
-            const fullDate = document.getElementById('outTime').textContent;
-
-            const entry = { rNo, name, mode, amt, bank, txn, aadhaar, dateStr, fullDate };
-            
-            const existingIndex = receiptHistory.findIndex(i => i.rNo === rNo);
-            if (existingIndex >= 0) {
-                receiptHistory[existingIndex] = entry; 
-            } else {
-                receiptHistory.push(entry);
-            }
-
-            localStorage.setItem('receiptHistory', JSON.stringify(receiptHistory));
-            renderHistory();
-        }
-
-        function renderHistory() {
-            const list = document.getElementById('historyList');
-            const dateFilter = document.getElementById('historyDate').value;
-            const searchFilter = document.getElementById('historySearch').value.toLowerCase();
-
-            list.innerHTML = '';
-            
-            let filtered = receiptHistory.filter(item => {
-                let matchDate = dateFilter ? item.dateStr === dateFilter : true;
-                let searchString = `${item.rNo} ${item.name} ${item.mode} ${item.amt} ${item.bank} ${item.txn} ${item.aadhaar}`.toLowerCase();
-                let matchSearch = searchFilter ? searchString.includes(searchFilter) : true;
-                return matchDate && matchSearch;
-            });
-
-            [...filtered].reverse().forEach(item => {
-                list.innerHTML += `
-                    <div class="history-item">
-                        <strong>${item.name}</strong>
-                        ${item.mode !== 'UPI' ? `<div>बैंक: ${item.bank}</div>` : ''}
-                        <div>राशि: ₹${item.amt}</div>
-                        <button class="view-print-btn" onclick="viewAndPrint('${item.rNo}')">View & Print</button>
-                    </div>
-                `;
-            });
-        }
-
-        function viewHistoryItem(rNo) {
-            const item = receiptHistory.find(i => i.rNo === rNo);
-            if(!item) return;
-
-            document.getElementById('outReceiptNo').textContent = item.rNo;
-            document.getElementById('outName').textContent = item.name;
-            document.getElementById('outMode').textContent = item.mode;
-            document.getElementById('outBank').textContent = item.bank;
-            document.getElementById('outAmt').textContent = item.amt;
-            document.getElementById('outTxn').textContent = item.txn;
-            document.getElementById('outAadhaar').textContent = item.aadhaar;
-            document.getElementById('outTime').textContent = item.fullDate;
-            
-            document.getElementById('outAadhaarRow').style.display = (item.aadhaar !== '-----' ? 'flex' : 'none');
-            document.getElementById('outBeneRow').style.display = 'none';
-            document.getElementById('outAccRow').style.display = 'none';
-            document.getElementById('outBankRow').style.display = (item.mode === 'UPI' ? 'none' : 'flex');
-            document.getElementById('outTxnRow').style.display = (item.mode === 'UPI' ? 'none' : 'flex');
-            document.getElementById('outTotalRow').style.display = (item.mode === 'UPI' ? 'none' : 'flex');
-            
-            document.getElementById('outAmtLabel').textContent = (item.mode === 'AEPS Deposit') ? 'जमा राशि' : (item.mode === 'Money Transfer' ? 'ट्रांसफर राशि' : (item.mode === 'UPI' ? 'राशि' : 'निकासी राशि'));
-        }
-
-        function viewAndPrint(rNo) {
-            viewHistoryItem(rNo);
-            setTimeout(() => {
-                window.print();
-            }, 100);
-        }
-
         function handlePrint() {
-            saveToHistory(); 
             window.print();
             let n = parseInt(localStorage.getItem('rNo') || '1') + 1;
             updateReceiptNo(n.toString());
@@ -533,8 +395,6 @@
         document.getElementById('inReceiptNo').value = saved;
         updateReceiptNo(saved);
         setMajorTab('auto');
-        
-        renderHistory();
     </script>
 </body>
 </html>
