@@ -406,6 +406,60 @@
         document.getElementById('inReceiptNo').value = saved;
         updateReceiptNo(saved);
         setMajorTab('auto');
+// --- ENGLISH TO HINDI TRANSLITERATION ---
+        async function handleTransliteration(e) {
+            const input = e.target;
+            const isKeyup = e.type === 'keyup';
+            const isBlur = e.type === 'blur';
+            
+            // Trigger on Space, Enter, OR when clicking away from the field (blur)
+            if ((isKeyup && (e.key === ' ' || e.key === 'Enter')) || isBlur) {
+                const text = input.value;
+                if (!text) return; // Do nothing if the field is empty
+
+                const words = text.split(' ');
+                
+                // If Space was pressed, the last item is empty, so target the word before it.
+                // If blurring, target the very last word typed.
+                let targetIndex = words.length - 1;
+                if (isKeyup && e.key === ' ' && words[targetIndex] === '') {
+                    targetIndex = words.length - 2;
+                }
+                
+                const wordToConvert = words[targetIndex];
+                
+                // Only convert if the word contains English letters
+                if (wordToConvert && /[a-zA-Z]/.test(wordToConvert)) {
+                    try {
+                        const url = `https://inputtools.google.com/request?text=${encodeURIComponent(wordToConvert)}&itc=hi-t-i0-und&num=1&cp=0&cs=1&ie=utf-8&oe=utf-8`;
+                        const response = await fetch(url);
+                        const data = await response.json();
+                        
+                        if (data[0] === 'SUCCESS' && data[1][0][1].length > 0) {
+                            words[targetIndex] = data[1][0][1][0]; 
+                            input.value = words.join(' ');
+                            updateReceipt(); // Instantly update the receipt preview
+                        }
+                    } catch (error) {
+                        console.error('Transliteration failed:', error);
+                    }
+                }
+            }
+        }
+
+        // Attach the transliteration feature to the specific name fields
+        window.addEventListener('DOMContentLoaded', () => {
+            const nameFields = ['genName', 'inName', 'inRecipient'];
+            nameFields.forEach(id => {
+                const el = document.getElementById(id);
+                if(el) {
+                    // Listen for Space/Enter
+                    el.addEventListener('keyup', handleTransliteration);
+                    // Listen for leaving the field
+                    el.addEventListener('blur', handleTransliteration);
+                }
+            });
+        });
     </script>
 </body>
 </html>
