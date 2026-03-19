@@ -148,7 +148,7 @@
                 </div>
                 <div class="form-group">
                     <label>ग्राहक का नाम</label>
-                    <input type="text" id="genName" class="clearable" oninput="updateReceipt()">
+                    <input type="text" id="genName" class="clearable" oninput="this.value = this.value.toUpperCase(); updateReceipt()">
                 </div>
                 <div class="form-group">
                     <label id="autoPasteLabel">निकासी मैसेज पेस्ट करें</label>
@@ -168,12 +168,12 @@
                     <button id="mWith" class="sub-btn" onclick="setManualMode('AEPS Withdrawal')">AEPS Withdrawal</button>
                     <button id="mUPI" class="sub-btn" onclick="setManualMode('UPI')">UPI</button>
                 </div>
-                <div class="form-group"><label>ग्राहक का नाम</label><input type="text" id="inName" class="clearable" oninput="updateReceipt()"></div>
+                <div class="form-group"><label>ग्राहक का नाम</label><input type="text" id="inName" class="clearable" oninput="this.value = this.value.toUpperCase(); updateReceipt()"></div>
                 
-                <div class="form-group" id="mRecipientGroup" style="display:none"><label>प्राप्तकर्ता का नाम</label><input type="text" id="inRecipient" class="clearable" oninput="updateReceipt()"></div>
+                <div class="form-group" id="mRecipientGroup" style="display:none"><label>प्राप्तकर्ता का नाम</label><input type="text" id="inRecipient" class="clearable" oninput="this.value = this.value.toUpperCase(); updateReceipt()"></div>
                 
                 <div class="form-group" id="mAadhaarGroup" style="display:none"><label>आधार नंबर</label><input type="text" id="inAadhaar" class="clearable" oninput="updateReceipt()"></div>
-                <div class="form-group" id="mBankGroup"><label>बैंक का नाम</label><input type="text" id="inBank" class="clearable" oninput="updateReceipt()"></div>
+                <div class="form-group" id="mBankGroup"><label>बैंक का नाम</label><input type="text" id="inBank" class="clearable" oninput="this.value = this.value.toUpperCase(); updateReceipt()"></div>
                 <div class="form-group" id="mTxnGroup"><label>ट्रांजैक्शन आईडी</label><input type="text" id="inTxn" class="clearable" oninput="updateReceipt()"></div>
                 <div class="form-group"><label id="manualAmtLabel">राशि</label><input type="number" id="inAmt" class="clearable" oninput="updateReceipt()"></div>
                 <div class="form-group" id="mTotalGroup"><label id="manualTotalLabel">शेष राशि</label><input type="text" id="inTotal" class="clearable" oninput="updateReceipt()"></div>
@@ -302,12 +302,12 @@
                 if (details['Bene Bank and IFSC']) res.bank = details['Bene Bank and IFSC'];
                 if (details['Txn Amount']) res.amt = details['Txn Amount'].replace('₹', '');
                 if (details['Txn ID']) res.txn = details['Txn ID'];
-                if (details['Bene Name']) res.bene = details['Bene Name'];
+                if (details['Bene Name']) res.bene = details['Bene Name'].toUpperCase();
                 if (details['Bene Account No.']) res.acc = details['Bene Account No.'];
                 if (details['Total Amt']) res.total = details['Total Amt'].replace('₹', '');
                 if (details['Customer Name & Mobile']) {
                     const namePart = details['Customer Name & Mobile'].split(' - ')[0];
-                    if(!document.getElementById('genName').value) document.getElementById('genName').value = namePart;
+                    if(!document.getElementById('genName').value) document.getElementById('genName').value = namePart.toUpperCase();
                 }
             } else {
                 const bankMatch = raw.match(/(?:Bank Name[:\s]+|Customer Bank Name\s+)([^\n\r]+)/i);
@@ -325,7 +325,7 @@
                 
                 // Fetch name automatically if it exists in text and user hasn't typed one
                 if (nameMatch && !document.getElementById('genName').value) {
-                    document.getElementById('genName').value = nameMatch[1].trim();
+                    document.getElementById('genName').value = nameMatch[1].trim().toUpperCase();
                 }
             }
             
@@ -340,7 +340,7 @@
                 isDeposit = (autoSub === 'deposit');
                 isTransfer = (autoSub === 'transfer');
                 mode = isTransfer ? 'Money Transfer' : (isDeposit ? 'AEPS Deposit' : 'AEPS Withdrawal');
-                name = document.getElementById('genName').value || '-----';
+                name = document.getElementById('genName').value.toUpperCase() || '-----';
                 bank = p.bank; amt = p.amt; txn = p.txn; aadhaar = p.aadhaar;
                 bene = p.bene; acc = p.acc;
                 total = (isDeposit || isTransfer) ? (document.getElementById('autoTotalInput').value || p.total) : p.total;
@@ -348,13 +348,13 @@
                 isDeposit = (manualMode === 'AEPS Deposit');
                 isTransfer = false;
                 mode = manualMode;
-                name = document.getElementById('inName').value || '-----';
-                bank = document.getElementById('inBank').value || '-----';
+                name = document.getElementById('inName').value.toUpperCase() || '-----';
+                bank = document.getElementById('inBank').value.toUpperCase() || '-----';
                 amt = document.getElementById('inAmt').value || '0';
                 total = document.getElementById('inTotal').value || '0.00';
                 txn = document.getElementById('inTxn').value || '-----';
                 aadhaar = document.getElementById('inAadhaar').value || '-----';
-                bene = (manualMode === 'UPI') ? (document.getElementById('inRecipient').value || '-----') : '-----';
+                bene = (manualMode === 'UPI') ? (document.getElementById('inRecipient').value.toUpperCase() || '-----') : '-----';
             }
 
             document.getElementById('outName').textContent = name;
@@ -406,60 +406,6 @@
         document.getElementById('inReceiptNo').value = saved;
         updateReceiptNo(saved);
         setMajorTab('auto');
-// --- ENGLISH TO HINDI TRANSLITERATION ---
-        async function handleTransliteration(e) {
-            const input = e.target;
-            const isKeyup = e.type === 'keyup';
-            const isBlur = e.type === 'blur';
-            
-            // Trigger on Space, Enter, OR when clicking away from the field (blur)
-            if ((isKeyup && (e.key === ' ' || e.key === 'Enter')) || isBlur) {
-                const text = input.value;
-                if (!text) return; // Do nothing if the field is empty
-
-                const words = text.split(' ');
-                
-                // If Space was pressed, the last item is empty, so target the word before it.
-                // If blurring, target the very last word typed.
-                let targetIndex = words.length - 1;
-                if (isKeyup && e.key === ' ' && words[targetIndex] === '') {
-                    targetIndex = words.length - 2;
-                }
-                
-                const wordToConvert = words[targetIndex];
-                
-                // Only convert if the word contains English letters
-                if (wordToConvert && /[a-zA-Z]/.test(wordToConvert)) {
-                    try {
-                        const url = `https://inputtools.google.com/request?text=${encodeURIComponent(wordToConvert)}&itc=hi-t-i0-und&num=1&cp=0&cs=1&ie=utf-8&oe=utf-8`;
-                        const response = await fetch(url);
-                        const data = await response.json();
-                        
-                        if (data[0] === 'SUCCESS' && data[1][0][1].length > 0) {
-                            words[targetIndex] = data[1][0][1][0]; 
-                            input.value = words.join(' ');
-                            updateReceipt(); // Instantly update the receipt preview
-                        }
-                    } catch (error) {
-                        console.error('Transliteration failed:', error);
-                    }
-                }
-            }
-        }
-
-        // Attach the transliteration feature to the specific name fields
-        window.addEventListener('DOMContentLoaded', () => {
-            const nameFields = ['genName', 'inName', 'inRecipient'];
-            nameFields.forEach(id => {
-                const el = document.getElementById(id);
-                if(el) {
-                    // Listen for Space/Enter
-                    el.addEventListener('keyup', handleTransliteration);
-                    // Listen for leaving the field
-                    el.addEventListener('blur', handleTransliteration);
-                }
-            });
-        });
     </script>
 </body>
 </html>
